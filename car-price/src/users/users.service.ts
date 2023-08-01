@@ -13,13 +13,15 @@ export class UsersService {
     private readonly userRepository: Repository<User> 
   ){}
 
-  async create(createUserDto: CreateUserDto) {
-    const user = this.userRepository.create(createUserDto)
+  async create(email: string, password: string) {
+    const user = this.userRepository.create({email, password})
 
     return await this.userRepository.save(user)
   }
  
   async findOne(id: number) {
+    if(!id) return null
+
     const user = await this.userRepository.findOneBy({id});
     if(!user){
       throw new NotFoundException(`User with id ${id} not found`)

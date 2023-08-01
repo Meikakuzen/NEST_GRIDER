@@ -1,4 +1,4 @@
-# 01 NEST TypeORM
+# 01 NEST TypeORM GRIDER
 
 - Proyecto
   

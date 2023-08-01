@@ -1,4 +1,4 @@
-# 02 NEST Custom Data Serialization
+# 02 NEST Custom Data Serialization  GRIDER
 
 - No queremos incluir el password en la respuesta y además debería estar encriptado
 - Entonces, debemos asegurarnos que cuando devolvamos un usuario, no devolvamos el password

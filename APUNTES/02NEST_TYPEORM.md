@@ -117,7 +117,7 @@ export class SerializeInterceptor implements NestInterceptor {
 @UseInterceptors(SerializeInterceptor)
 @Get(':id')
 async findUser(@Param('id') id: string) {
-    await this.usersService.findOne(+id);
+    return await this.usersService.findOne(+id);
  }
 ~~~
 
@@ -188,7 +188,7 @@ export class SerializeInterceptor implements NestInterceptor {
 @UseInterceptors(new SerializeInterceptor(UserDto))
 @Get(':id')
 async findUser(@Param('id') id: string) {
-    await this.usersService.findOne(+id);
+   return await this.usersService.findOne(+id);
 }
 ~~~
 
@@ -237,7 +237,7 @@ export function Serialize(dto: any){
 @Serialize(UserDto)
 @Get(':id')
 async findUser(@Param('id') id: string) {
-    await this.usersService.findOne(+id);
+    return await this.usersService.findOne(+id);
 }
 ~~~
 ------

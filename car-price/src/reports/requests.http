@@ -1,15 +1,22 @@
 
 ### Create a Report
 POST http://localhost:3000/reports
-content-type: application/json
+Content-type: application/json
 
 {
-    "price": 1000,
-    "make": "Toyota",
-    "model": "Corola",
+    "price": 300,
+    "make": "Seat",
+    "model": "Ibiza",
     "year": 1999,
     "lng": 0,
     "lat": 0,
     "mileage": 1000
     
     }
+
+PATCH http://localhost:3000/reports/
+Content-Type: application/json
+
+{
+    "approved": true
+}

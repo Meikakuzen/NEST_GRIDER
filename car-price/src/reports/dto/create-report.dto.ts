@@ -1,4 +1,4 @@
-import {IsString, IsNumber, Min, Max, isLatitude, IsLongitude, IsLatitude} from 'class-validator'
+import {IsString, IsNumber, Min, Max, isLatitude, IsLongitude, IsLatitude, IsBoolean} from 'class-validator'
 
 
 export class CreateReportDto {
@@ -10,7 +10,7 @@ export class CreateReportDto {
     model: string
 
     @IsNumber()
-    @Min(1900)
+    @Min(1930)
     @Max(2050)
     year: number
 
@@ -29,6 +29,7 @@ export class CreateReportDto {
     @Min(0)
     @Max(1000000)
     price: number
+
 }
 
 

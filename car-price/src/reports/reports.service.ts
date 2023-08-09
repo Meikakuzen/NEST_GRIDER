@@ -1,10 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateReportDto } from './dto/create-report.dto';
 import { UpdateReportDto } from './dto/update-report.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Report } from './entities/report.entity';
 import { Repository } from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
+import { ApprovedReportDto } from './dto/approved-report.dto';
+import { GetEstimateDto } from './dto/get-estimated.dto';
 
 @Injectable()
 export class ReportsService {
@@ -18,16 +20,19 @@ export class ReportsService {
     return this.repo.save(report)
   }
 
-  findAll() {
-    return `This action returns all reports`;
+
+  getEstimate(query: GetEstimateDto) {
+    return 'OK' ;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} report`;
-  }
+  async changeApproval(id: number, approved: boolean) {
 
-  update(id: number, updateReportDto: UpdateReportDto) {
-    return `This action updates a #${id} report`;
+    const report = await this.repo.findOneBy({id})
+
+    if(!report) throw new NotFoundException('Report not found')
+
+    report.approved = approved
+    return this.repo.save(report)
   }
 
   remove(id: number) {

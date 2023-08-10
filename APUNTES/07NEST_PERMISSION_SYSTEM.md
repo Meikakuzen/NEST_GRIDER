@@ -395,3 +395,69 @@ export class GetEstimateDto{
 ------
 
 ## Creating a Query Builder
+
+- Podemos usar find y findOne como filtro sobre los reports
+- Hay varios pasos descritos anteriormente que quiero hacer con la query
+- Para eso usaré createQueryBuiler en el servicio
+- reports.controller
+
+~~~js
+@Get()
+getEstimate(@Query() query: GetEstimateDto) {
+  return this.reportsService.createEstimate(query);
+}
+~~~
+
+- Vamos con el createQueryBuilder
+- Con select asterisco elijo todos los registros
+- En el where hago el filtrado, le digo que el valor make será igual a un valor make que yo le voy a indicar y se lo paso en un objeto
+- Con getRawMany obtengo el resultado
+- **NOTA**: Podría desestructurar las propiedades con createEstimate({make, model,lng,lat}) pero lo hago así para que quede más claro
+- reports.service
+
+~~~js
+  createEstimate(estimateDto: GetEstimateDto) {
+    return this.repo.createQueryBuilder()
+    .select('*') //selecciono todo
+    .where('make = :make', {make: estimateDto.make} )  //filtro el resultado
+    .getRawMany() //obtengo el resultado
+  }
+~~~
+
+- Si volviera a escribir otro .where sobreescribiría el anterior
+- Para encadenar where uso andWhere
+- Para hacer el rango de 5º de lng y lat uso BETWEEN
+- Para ordenar por kilometraje le resto el mileage dado a la propiedad mileage
+  - Si le pudeo indicar el orden en valores descendientes con DESC. Uso ABS para obtener el valor absoluto y no me de un posible valor negativo
+  - OrderBy no me permite pasarle en un objeto mileage, uso setParameters
+  - Para obtener solo 3 resultados uso limit(3)
+  - En el select, en lugar de buscar con * uso AVG(de average, promedio, del precio de los 3 resultados) y le paso el precio como string
+  - En lugar de getRawMany uso getRawOne
+
+~~~js
+createEstimate({make, model, lat, lng, year, mileage}) {
+  return this.repo.createQueryBuilder()
+                  .select('AVG(price)', 'price') 
+                  .where('make = :make', {make} )  
+                  .andWhere('model = :model', {model})
+                  .andWhere('lat - :lat BETWEEN -5 AND 5', {lat})
+                  .andWhere('lng - :lng BETWEEN -5 AND 5', {lng})
+                  .andWhere('year - :year BETWEEN -3 AND 3', {year})
+                  .orderBy('ABS(mileage -:mileage)', 'DESC' )
+                  .setParameters({mileage})
+                  .limit(3)
+                  .getRawOne() 
+}
+~~~
+
+- Para probar esta logica debo crear algunos reports con la misma marca y modelo
+- Si creo 3 modelos SET Panda enntre los años 1990-1995 y apunto a este endpoint me da un precio promedio
+
+> http://localhost:3000/reports?make=Seat&model=Panda&lat=0&lng=0&mileage=1000&year=1991
+
+- Ahora falta añadir que los reports estén aprovados para poder contar con ellos
+- Uso andWhere en el queryBuilder
+
+> .andWhere('approved IS TRUE')
+
+- Si no hay resultados devuelve null

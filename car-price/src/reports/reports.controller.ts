@@ -24,7 +24,7 @@ export class ReportsController {
 
   @Get()
   getEstimate(@Query() query: GetEstimateDto) {
-    return this.reportsService.getEstimate(query);
+    return this.reportsService.createEstimate(query);
   }
 
   @Patch('/:id')
